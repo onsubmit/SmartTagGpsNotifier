@@ -97,7 +97,7 @@ namespace SmartTagGpsNotifier
                 throw new InvalidOperationException($"Config value with key {key} is empty");
             }
 
-            return key;
+            return this.root[key];
         }
 
         /// <summary>
