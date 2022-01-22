@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "Schedule": "0 * 14-16 * * 1-5",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "SMTP_SERVER": "smtp-mail.outlook.com",
+    "SMTP_SERVER_PORT": "587",
+    "EMAIL_FROM": "<changeme>@outlook.com",
+    "EMAIL_FROM_PASSWORD": "changeme",
+    "EMAIL_TO": "<changeme1>@outlook.com,<changeme2>@outlook.com",
+    "HOME_LAT": "0.000000",
+    "HOME_LONG": "0.000000",
+    "METERS_TO_NOTIFY": "1000",
+    "SMART_TAG_STUDENT_ID": "changeme"
+  }
+}
