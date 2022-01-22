@@ -14,25 +14,29 @@ namespace SmartTagGpsNotifier
     /// </summary>
     internal class Config
     {
+        private readonly IConfigurationRoot root;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Config"/> class.
         /// </summary>
         /// <param name="root">The configuration root.</param>
         internal Config(IConfigurationRoot root)
         {
-            this.SmtpServer = ValidateString(root["SMTP_SERVER"]);
-            this.SmtpServerPort = GetInteger(root["SMTP_SERVER_PORT"]);
+            this.root = root;
 
-            this.EmailFrom = ValidateString(root["EMAIL_FROM"]);
-            this.EmailFromPassword = ValidateString(root["EMAIL_FROM_PASSWORD"]);
-            this.EmailTo = ValidateString(root["EMAIL_TO"]);
+            this.SmtpServer = this.ValidateString("SMTP_SERVER");
+            this.SmtpServerPort = this.GetInteger("SMTP_SERVER_PORT");
 
-            this.HomeLatitude = GetDouble(root["HOME_LAT"]);
-            this.HomeLongitude = GetDouble(root["HOME_LONG"]);
+            this.EmailFrom = this.ValidateString("EMAIL_FROM");
+            this.EmailFromPassword = this.ValidateString("EMAIL_FROM_PASSWORD");
+            this.EmailTo = this.ValidateString("EMAIL_TO");
 
-            this.MetersToNotify = GetDouble(root["METERS_TO_NOTIFY"]);
+            this.HomeLatitude = this.GetDouble("HOME_LAT");
+            this.HomeLongitude = this.GetDouble("HOME_LONG");
 
-            this.SmartTagStudentId = GetInteger(root["SMART_TAG_STUDENT_ID"]);
+            this.MetersToNotify = this.GetDouble("METERS_TO_NOTIFY");
+
+            this.SmartTagStudentId = this.GetInteger("SMART_TAG_STUDENT_ID");
         }
 
         /// <summary>
@@ -83,32 +87,32 @@ namespace SmartTagGpsNotifier
         /// <summary>
         /// Validates a string.
         /// </summary>
-        /// <param name="value">The string value.</param>
+        /// <param name="key">The config key.</param>
         /// <returns>The string, if it's valid.</returns>
         /// <exception cref="ArgumentException">Throw if the value is empty.</exception>
-        private static string ValidateString(string value)
+        private string ValidateString(string key)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(this.root[key]))
             {
-                throw new ArgumentException("Value is empty", nameof(value));
+                throw new InvalidOperationException($"Config value with key {key} is empty");
             }
 
-            return value;
+            return key;
         }
 
         /// <summary>
         /// Gets an integer value from a string.
         /// </summary>
-        /// <param name="value">The string value.</param>
+        /// <param name="key">The config key.</param>
         /// <returns>An integer.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the value cannot be parsed.</exception>
-        private static int GetInteger(string value)
+        private int GetInteger(string key)
         {
-            ValidateString(value);
+            this.ValidateString(key);
 
-            if (!int.TryParse(value, out int number))
+            if (!int.TryParse(this.root[key], out int number))
             {
-                throw new InvalidOperationException($"Could not parse {value} as an integer.");
+                throw new InvalidOperationException($"Could not parse {this.root[key]} as an integer.");
             }
 
             return number;
@@ -117,16 +121,16 @@ namespace SmartTagGpsNotifier
         /// <summary>
         /// Gets a double value from a string.
         /// </summary>
-        /// <param name="value">The string value.</param>
+        /// <param name="key">The config key.</param>
         /// <returns>A double.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the value cannot be parsed.</exception>
-        private static double GetDouble(string value)
+        private double GetDouble(string key)
         {
-            ValidateString(value);
+            this.ValidateString(key);
 
-            if (!double.TryParse(value, out double number))
+            if (!double.TryParse(this.root[key], out double number))
             {
-                throw new InvalidOperationException($"Could not parse {value} as a double.");
+                throw new InvalidOperationException($"Could not parse {this.root[key]} as a double.");
             }
 
             return number;
